@@ -43,6 +43,7 @@ function App() {
           <Routes>
             <Route path='/' element={<SearchBooks />} />
             <Route path='/saved' element={<SavedBooks />} />
+            <Route path='*' element={<SearchBooks />} />
           </Routes>
         </>
       </Router>

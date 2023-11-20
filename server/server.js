@@ -1,16 +1,14 @@
 require('dotenv').config();
 
 const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
+const { ApolloServer } = require('apollo-server-express');
 const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 
-
 // Not needed
 // const routes = require('./routes');
-
 
 const app = express();
 const PORT = process.env.PORT || 3005;
@@ -18,10 +16,10 @@ const PORT = process.env.PORT || 3005;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  // context: authMiddleware,
+  context: authMiddleware,
 });
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // if we're in production, serve client/build as static assets
@@ -38,7 +36,6 @@ app.get('*', (req, res) => {
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app });
-
   db.once('open', () => {
     app.listen(PORT, () => {
       console.log(`🌍 Now listening on localhost:${PORT}`);
